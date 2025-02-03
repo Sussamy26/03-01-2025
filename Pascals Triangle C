@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int** generate(int numRows, int* returnSize, int** returnColumnSizes) {
+    *returnSize = numRows;
+    int** triangle = (int**)malloc(numRows * sizeof(int*));
+    *returnColumnSizes = (int*)malloc(numRows * sizeof(int));
+    
+    for (int i = 0; i < numRows; i++) {
+        triangle[i] = (int*)malloc((i + 1) * sizeof(int));
+        (*returnColumnSizes)[i] = i + 1;
+        
+        for (int j = 0; j <= i; j++) {
+            if (j == 0 || j == i) {
+                triangle[i][j] = 1;
+            } else {
+                triangle[i][j] = triangle[i - 1][j - 1] + triangle[i - 1][j];
+            }
+        }
+    }
+    return triangle;
+}
+
+void printPascalsTriangle(int** triangle, int numRows, int* returnColumnSizes) {
+    for (int i = 0; i < numRows; i++) {
+        for (int j = 0; j < returnColumnSizes[i]; j++) {
+            printf("%d ", triangle[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void freePascalsTriangle(int** triangle, int numRows) {
+    for (int i = 0; i < numRows; i++) {
+        free(triangle[i]);
+    }
+    free(triangle);
+}
+
+int main() {
+    int numRows;
+    printf("Enter the number of rows: ");
+    scanf("%d", &numRows);
+    
+    int returnSize;
+    int* returnColumnSizes;
+    int** triangle = generate(numRows, &returnSize, &returnColumnSizes);
+    
+    printPascalsTriangle(triangle, returnSize, returnColumnSizes);
+    
+    freePascalsTriangle(triangle, returnSize);
+    free(returnColumnSizes);
+    
+    return 0;
+}
+
